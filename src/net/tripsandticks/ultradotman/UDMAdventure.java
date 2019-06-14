@@ -4,7 +4,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -13,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import processing.core.PApplet;
 import processing.core.PSurface;
@@ -21,6 +24,7 @@ import processing.javafx.PSurfaceFX;
 public class UDMAdventure extends PApplet {
     
     private Color color = new Color(0, 0, 0);
+    private EmergentProperties ilities = new EmergentProperties(color);
     private static final int ULTRADOTMAN_SIZE = 40;
 
     public static void main(String[] args) {
@@ -47,6 +51,7 @@ public class UDMAdventure extends PApplet {
     
     public void setColor(Color color) {
         this.color = color;
+        this.ilities = new EmergentProperties(color);
     }
     
     @Override
@@ -63,9 +68,10 @@ public class UDMAdventure extends PApplet {
         canvas.heightProperty().unbind();
         
         GridPane settings = constructSettings();
+        HBox ilityScreen = constructIlityScreen();
 
-        final HBox hBox = new HBox(settings, canvas); // Menubar will sit on top of canvas
-        final Scene newscene = new Scene(hBox); // Create a scene from the elements
+        final VBox vBox = new VBox(new HBox(settings, canvas), ilityScreen);
+        final Scene newscene = new Scene(vBox); // Create a scene from the elements
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -81,6 +87,10 @@ public class UDMAdventure extends PApplet {
         Label labelR = new Label("Red: ");
         Label labelG = new Label("Green: ");
         Label labelB = new Label("Blue: ");
+        
+        GridPane.setHalignment(labelR, HPos.RIGHT);
+        GridPane.setHalignment(labelG, HPos.RIGHT);
+        GridPane.setHalignment(labelB, HPos.RIGHT);
 
         settings.add(labelR, 0, 2);
         settings.add(labelG, 0, 3);
@@ -110,7 +120,7 @@ public class UDMAdventure extends PApplet {
                     int red = Integer.parseInt(fieldR.getText());
                     int green = Integer.parseInt(fieldG.getText());
                     int blue = Integer.parseInt(fieldB.getText());
-                    color = new Color(red, green, blue);
+                    setColor(new Color(red, green, blue));
                 }
                 catch (NumberFormatException e) {
                     System.err.println("invalid input");
@@ -125,7 +135,12 @@ public class UDMAdventure extends PApplet {
                     int red = ThreadLocalRandom.current().nextInt(0,256);
                     int green = ThreadLocalRandom.current().nextInt(0,256);
                     int blue = ThreadLocalRandom.current().nextInt(0,256);
-                    color = new Color(red, green, blue);
+                    
+                    fieldR.setText("" + red);
+                    fieldG.setText("" + green);
+                    fieldB.setText("" + blue);
+                    
+                    setColor(new Color(red, green, blue));
                 }
                 catch (NumberFormatException e) {
                     System.err.println("invalid input");
@@ -135,4 +150,23 @@ public class UDMAdventure extends PApplet {
 
         return settings;
     }
+    
+    private HBox constructIlityScreen() {
+        HBox ilityScreen = new HBox();
+        ilityScreen.setPadding(new Insets(5));
+        ilityScreen.setSpacing(50);
+        ilityScreen.setAlignment(Pos.BOTTOM_CENTER);
+
+        Label labelH = new Label("hue: " + ilities.getHue());
+        Label labelS = new Label("saturation: " + ilities.getSaturation());
+        Label labelV = new Label("value: " + ilities.getValue());
+        
+        ilityScreen.getChildren().add(labelH);
+        ilityScreen.getChildren().add(labelS);
+        ilityScreen.getChildren().add(labelV);
+
+        return ilityScreen;
+    }
+    
+    // TODO: update ility screen
 }
