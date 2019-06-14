@@ -3,8 +3,8 @@ package net.tripsandticks.ultradotman;
 
 public class Color {
     private final int red;
-    private final int blue;
     private final int green;
+    private final int blue;
     
     /* Abstraction function:
      *     AF(red, green, blue) is a color with red value "red", etc.
@@ -12,7 +12,7 @@ public class Color {
      *     red, blue, green are in [0,255]
      */
     
-    public Color(int red, int blue, int green) {
+    public Color(int red, int green, int blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;
