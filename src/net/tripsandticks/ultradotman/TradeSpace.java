@@ -6,7 +6,7 @@ import java.util.List;
 public class TradeSpace {
     private final List<EmergentProperties> traversal;
     public static final EmergentProperties UTOPIA = 
-            new EmergentProperties(new Color(255, 255, 255));
+            new EmergentProperties(new RGBColor(255, 255, 255));
     
     public TradeSpace() {
         this.traversal = new ArrayList<>();

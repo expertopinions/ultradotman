@@ -2,13 +2,14 @@ package net.tripsandticks.ultradotman;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import javafx.application.Platform;
+import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -16,72 +17,83 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import processing.core.PApplet;
-import processing.core.PSurface;
-import processing.javafx.PSurfaceFX;
 
-public class UDMAdventure extends PApplet {
+public class UDMAdventure extends Application {
     
-    private Color color = new Color(0, 0, 0);
+    private RGBColor color = new RGBColor(0, 0, 0);
     private EmergentProperties ilities = new EmergentProperties(color);
-    private static final int ULTRADOTMAN_SIZE = 40;
+    private static final int ULTRADOTMAN_RADIUS = 40;
+    private static final int CANVAS_SIDE = 250;
 
-    public static void main(String[] args) {
-        PApplet.main("net.tripsandticks.ultradotman.UDMAdventure");
-    }
-    
     @Override
-    public void settings() {
-        size(250,250,FX2D);
+    public void start(Stage stage) {
+        stage.setTitle("ultradotman");
+
+        HBox ilityScreen = constructIlityScreen();
+        Canvas canvas = constructCanvas();
+        GridPane settings = constructSettings(ilityScreen, canvas);
+        
+        final VBox vBox = new VBox(new HBox(settings, canvas), ilityScreen);
+        final Scene scene = new Scene(vBox);
+        
+        stage.setScene(scene);
+        stage.show();
     }
     
-    @Override
-    public void draw() {
-        background(0);
-        noStroke();
-        
-        int red = color.getRed();
-        int green = color.getGreen();
-        int blue = color.getBlue();
-        
-        fill(red, green, blue);
-        circle(width/2, height/2, ULTRADOTMAN_SIZE);
+    private Canvas constructCanvas() {
+        Canvas canvas = new Canvas(CANVAS_SIDE, CANVAS_SIDE);
+        updateCanvas(canvas);
+        return canvas;
     }
     
-    public void setColor(Color color) {
+    private void updateCanvas(Canvas canvas) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, 250, 250);
+        gc.setFill(Color.rgb(color.getRed(), color.getGreen(), color.getBlue()));
+        gc.fillOval((CANVAS_SIDE - ULTRADOTMAN_RADIUS) / 2,
+                    (CANVAS_SIDE - ULTRADOTMAN_RADIUS) / 2,
+                    ULTRADOTMAN_RADIUS, ULTRADOTMAN_RADIUS);
+    }
+
+    private void setColor(RGBColor color) {
         this.color = color;
         this.ilities = new EmergentProperties(color);
     }
     
-    @Override
-    protected PSurface initSurface() {
-        // source: https://stackoverflow.com/questions/28266274/how-to-embed-a-papplet-in-javafx
-        PSurface surface1 = super.initSurface();
+    private HBox constructIlityScreen() {
+        HBox ilityScreen = new HBox();
+        ilityScreen.setPadding(new Insets(5));
+        ilityScreen.setSpacing(40);
+        ilityScreen.setAlignment(Pos.BOTTOM_CENTER);
 
-        final PSurfaceFX FXSurface = (PSurfaceFX) surface1;
-        final Canvas canvas = (Canvas) FXSurface.getNative(); // canvas is the processing drawing
-        final Stage stage = (Stage) canvas.getScene().getWindow(); // stage is the window
-
-        stage.setTitle("ultradotman");
-        canvas.widthProperty().unbind();
-        canvas.heightProperty().unbind();
+        Label labelH = new Label();
+        Label labelS = new Label();
+        Label labelV = new Label();
         
-        GridPane settings = constructSettings();
-        HBox ilityScreen = constructIlityScreen();
+        ilityScreen.getChildren().add(labelH);
+        ilityScreen.getChildren().add(labelS);
+        ilityScreen.getChildren().add(labelV);
+        
+        updateIlityScreen(ilityScreen);
 
-        final VBox vBox = new VBox(new HBox(settings, canvas), ilityScreen);
-        final Scene newscene = new Scene(vBox); // Create a scene from the elements
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                stage.setScene(newscene); // Replace the stage's scene with our new one.
-            }
-        });
-        return surface1;
+        return ilityScreen;
     }
     
-    private GridPane constructSettings() {
+    private void updateIlityScreen(HBox screen) {
+        Label labelH = (Label)screen.getChildren().get(0);
+        Label labelS = (Label)screen.getChildren().get(1);
+        Label labelV = (Label)screen.getChildren().get(2);
+        
+        labelH.setText("hue: " + String.format("%.2fº", ilities.getHue()));
+        labelS.setText("saturation: " + String.format("%.4f",
+                                                    ilities.getSaturation()));
+        labelV.setText("value: " + String.format("%.4f", ilities.getValue()));
+    }
+    
+    private GridPane constructSettings(HBox ilityScreen, Canvas canvas) {
         GridPane settings = new GridPane();
 
         Label labelR = new Label("Red: ");
@@ -120,7 +132,10 @@ public class UDMAdventure extends PApplet {
                     int red = Integer.parseInt(fieldR.getText());
                     int green = Integer.parseInt(fieldG.getText());
                     int blue = Integer.parseInt(fieldB.getText());
-                    setColor(new Color(red, green, blue));
+                    
+                    setColor(new RGBColor(red, green, blue));
+                    updateCanvas(canvas);
+                    updateIlityScreen(ilityScreen);
                 }
                 catch (NumberFormatException e) {
                     System.err.println("invalid input");
@@ -140,7 +155,9 @@ public class UDMAdventure extends PApplet {
                     fieldG.setText("" + green);
                     fieldB.setText("" + blue);
                     
-                    setColor(new Color(red, green, blue));
+                    setColor(new RGBColor(red, green, blue));
+                    updateCanvas(canvas);
+                    updateIlityScreen(ilityScreen);
                 }
                 catch (NumberFormatException e) {
                     System.err.println("invalid input");
@@ -151,22 +168,9 @@ public class UDMAdventure extends PApplet {
         return settings;
     }
     
-    private HBox constructIlityScreen() {
-        HBox ilityScreen = new HBox();
-        ilityScreen.setPadding(new Insets(5));
-        ilityScreen.setSpacing(50);
-        ilityScreen.setAlignment(Pos.BOTTOM_CENTER);
-
-        Label labelH = new Label("hue: " + ilities.getHue());
-        Label labelS = new Label("saturation: " + ilities.getSaturation());
-        Label labelV = new Label("value: " + ilities.getValue());
-        
-        ilityScreen.getChildren().add(labelH);
-        ilityScreen.getChildren().add(labelS);
-        ilityScreen.getChildren().add(labelV);
-
-        return ilityScreen;
+    public static void main(String[] args) {
+        launch();
     }
     
-    // TODO: update ility screen
+    
 }
