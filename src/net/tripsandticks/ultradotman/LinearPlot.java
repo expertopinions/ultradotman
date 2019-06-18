@@ -3,12 +3,11 @@ package net.tripsandticks.ultradotman;
 import java.util.List;
 
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
-public class LinearPlot extends Node {
+public class LinearPlot {
     public enum PropertyAxis { HUE, SATURATION, VALUE }
     private PropertyAxis xAxis, yAxis;
     private TradeSpace points;
