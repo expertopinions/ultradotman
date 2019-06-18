@@ -6,94 +6,89 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.scene.Camera;
+import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.PointLight;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
+import net.tripsandticks.ultradotman.LinearPlot.PropertyAxis;
 
 public class UDMAdventure extends Application {
     
-    private RGBColor color = new RGBColor(0, 0, 0);
-    private EmergentProperties ilities = new EmergentProperties(color);
     private static final int ULTRADOTMAN_RADIUS = 40;
-    private static final int CANVAS_SIDE = 250;
+    private static final int WINDOW_WIDTH = 600;
+    private static final int WINDOW_HEIGHT = 450;
 
+    private RGBColor color = new RGBColor(255, 0, 0);
+    private EmergentProperties ilities = new EmergentProperties(color);
+    private TradeSpace tradeSpace = new TradeSpace();
+    
+    private final Group root = new Group();
+    private final PhongMaterial dotmanMaterial = new PhongMaterial();
+    private LinearPlot plot = new LinearPlot(200, 200, PropertyAxis.SATURATION,
+            PropertyAxis.VALUE, tradeSpace);
+    private Group plotGroup = new Group();
+    
+    public static void main(String[] args) {
+        launch();
+    }
+    
     @Override
     public void start(Stage stage) {
         stage.setTitle("ultradotman");
-
-        HBox ilityScreen = constructIlityScreen();
-        Canvas canvas = constructCanvas();
-        GridPane settings = constructSettings(ilityScreen, canvas);
         
-        final VBox vBox = new VBox(new HBox(settings, canvas), ilityScreen);
-        final Scene scene = new Scene(vBox);
+        tradeSpace.add(ilities);
+        plot.updatePoints(plotGroup);
+        plotGroup.setTranslateX(375);
+        plotGroup.setTranslateY(225);
+        // uncommenting this line causes everything to explode
+        // which is inconvenient because this is supposed to be the plot
+        // of ilities
+        
+        construct3DElements();
+        
+        root.getChildren().add(constructSettings());
+        root.getChildren().add(plotGroup);
+        
+        Camera camera = new PerspectiveCamera();
+        
+        final Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+        scene.setFill(Color.color(0.05, 0.05, 0.05, 1.0));
+        scene.setCamera(camera);
         
         stage.setScene(scene);
         stage.show();
     }
     
-    private Canvas constructCanvas() {
-        Canvas canvas = new Canvas(CANVAS_SIDE, CANVAS_SIDE);
-        updateCanvas(canvas);
-        return canvas;
-    }
-    
-    private void updateCanvas(Canvas canvas) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, 250, 250);
-        gc.setFill(Color.rgb(color.getRed(), color.getGreen(), color.getBlue()));
-        gc.fillOval((CANVAS_SIDE - ULTRADOTMAN_RADIUS) / 2,
-                    (CANVAS_SIDE - ULTRADOTMAN_RADIUS) / 2,
-                    ULTRADOTMAN_RADIUS, ULTRADOTMAN_RADIUS);
-    }
-
-    private void setColor(RGBColor color) {
-        this.color = color;
-        this.ilities = new EmergentProperties(color);
-    }
-    
-    private HBox constructIlityScreen() {
-        HBox ilityScreen = new HBox();
-        ilityScreen.setPadding(new Insets(5));
-        ilityScreen.setSpacing(40);
-        ilityScreen.setAlignment(Pos.BOTTOM_CENTER);
-
-        Label labelH = new Label();
-        Label labelS = new Label();
-        Label labelV = new Label();
+    private void construct3DElements() {
+        updateMaterial();
         
-        ilityScreen.getChildren().add(labelH);
-        ilityScreen.getChildren().add(labelS);
-        ilityScreen.getChildren().add(labelV);
-        
-        updateIlityScreen(ilityScreen);
+        Sphere dotman = new Sphere(ULTRADOTMAN_RADIUS);
+        dotman.setMaterial(dotmanMaterial);
+        dotman.setTranslateX(WINDOW_WIDTH / 2);
+        dotman.setTranslateY(WINDOW_HEIGHT / 2);
 
-        return ilityScreen;
-    }
-    
-    private void updateIlityScreen(HBox screen) {
-        Label labelH = (Label)screen.getChildren().get(0);
-        Label labelS = (Label)screen.getChildren().get(1);
-        Label labelV = (Label)screen.getChildren().get(2);
+        root.getChildren().add(dotman);
         
-        labelH.setText("hue: " + String.format("%.2fº", ilities.getHue()));
-        labelS.setText("saturation: " + String.format("%.4f",
-                                                    ilities.getSaturation()));
-        labelV.setText("value: " + String.format("%.4f", ilities.getValue()));
+        PointLight light = new PointLight();
+        light.setColor(Color.gray(1));
+        light.setTranslateX(WINDOW_WIDTH / 5);
+        light.setTranslateY(WINDOW_HEIGHT / 6);
+        light.setTranslateZ(-WINDOW_HEIGHT / 2);
+        
+        root.getChildren().add(light);
     }
     
-    private GridPane constructSettings(HBox ilityScreen, Canvas canvas) {
+    private GridPane constructSettings() {
         GridPane settings = new GridPane();
 
         Label labelR = new Label("Red: ");
@@ -103,14 +98,22 @@ public class UDMAdventure extends Application {
         GridPane.setHalignment(labelR, HPos.RIGHT);
         GridPane.setHalignment(labelG, HPos.RIGHT);
         GridPane.setHalignment(labelB, HPos.RIGHT);
+        
+        labelR.setTextFill(Color.gray(0.8));
+        labelG.setTextFill(Color.gray(0.8));
+        labelB.setTextFill(Color.gray(0.8));
 
         settings.add(labelR, 0, 2);
         settings.add(labelG, 0, 3);
         settings.add(labelB, 0, 4);
 
-        TextField fieldR = new TextField("0");
-        TextField fieldG = new TextField("0");
-        TextField fieldB = new TextField("0");
+        TextField fieldR = new TextField(""+color.getRed());
+        TextField fieldG = new TextField(""+color.getGreen());
+        TextField fieldB = new TextField(""+color.getBlue());
+        
+        fieldR.setPrefWidth(75);
+        fieldG.setPrefWidth(75);
+        fieldB.setPrefWidth(75);
 
         settings.add(fieldR, 1, 2);
         settings.add(fieldG, 1, 3);
@@ -133,9 +136,8 @@ public class UDMAdventure extends Application {
                     int green = Integer.parseInt(fieldG.getText());
                     int blue = Integer.parseInt(fieldB.getText());
                     
-                    setColor(new RGBColor(red, green, blue));
-                    updateCanvas(canvas);
-                    updateIlityScreen(ilityScreen);
+                    color = new RGBColor(red, green, blue);
+                    update();
                 }
                 catch (NumberFormatException e) {
                     System.err.println("invalid input");
@@ -154,10 +156,9 @@ public class UDMAdventure extends Application {
                     fieldR.setText("" + red);
                     fieldG.setText("" + green);
                     fieldB.setText("" + blue);
-                    
-                    setColor(new RGBColor(red, green, blue));
-                    updateCanvas(canvas);
-                    updateIlityScreen(ilityScreen);
+
+                    color = new RGBColor(red, green, blue);
+                    update();
                 }
                 catch (NumberFormatException e) {
                     System.err.println("invalid input");
@@ -168,9 +169,20 @@ public class UDMAdventure extends Application {
         return settings;
     }
     
-    public static void main(String[] args) {
-        launch();
+    private void update() {
+        updateMaterial();
+        updateIlities();
     }
     
+    private void updateMaterial() {
+        dotmanMaterial.setSpecularColor(Color.gray(0));
+        dotmanMaterial.setDiffuseColor(Color.rgb(color.getRed(),
+                color.getBlue(), color.getGreen()));
+    }
     
+    private void updateIlities() {
+        ilities = new EmergentProperties(color);
+        tradeSpace.add(ilities);
+        plot.updatePoints(plotGroup);
+    }
 }
