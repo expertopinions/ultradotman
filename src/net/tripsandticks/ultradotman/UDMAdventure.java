@@ -50,9 +50,6 @@ public class UDMAdventure extends Application {
         plot.updatePoints(plotGroup);
         plotGroup.setTranslateX(375);
         plotGroup.setTranslateY(225);
-        // uncommenting this line causes everything to explode
-        // which is inconvenient because this is supposed to be the plot
-        // of ilities
         
         construct3DElements();
         
