@@ -145,21 +145,16 @@ public class UDMAdventure extends Application {
         random.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent arg0) {
-                try {
-                    int red = ThreadLocalRandom.current().nextInt(0,256);
-                    int green = ThreadLocalRandom.current().nextInt(0,256);
-                    int blue = ThreadLocalRandom.current().nextInt(0,256);
-                    
-                    fieldR.setText("" + red);
-                    fieldG.setText("" + green);
-                    fieldB.setText("" + blue);
+                int red = ThreadLocalRandom.current().nextInt(0,256);
+                int green = ThreadLocalRandom.current().nextInt(0,256);
+                int blue = ThreadLocalRandom.current().nextInt(0,256);
 
-                    color = new RGBColor(red, green, blue);
-                    update();
-                }
-                catch (NumberFormatException e) {
-                    System.err.println("invalid input");
-                }
+                fieldR.setText("" + red);
+                fieldG.setText("" + green);
+                fieldB.setText("" + blue);
+
+                color = new RGBColor(red, green, blue);
+                update();
             }
         });
 
