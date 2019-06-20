@@ -1,7 +1,7 @@
 package net.tripsandticks.ultradotman;
 
 
-public class MorphologicalMatrix {
+public class InputState {
     private final int red;
     private final int green;
     private final int blue;
@@ -12,7 +12,7 @@ public class MorphologicalMatrix {
      *     red, blue, green are in [0,255]
      */
     
-    public MorphologicalMatrix(int red, int green, int blue) {
+    public InputState(int red, int green, int blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;

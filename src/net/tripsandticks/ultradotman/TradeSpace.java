@@ -7,19 +7,19 @@ import java.util.stream.Collectors;
 import net.tripsandticks.ultradotman.LinearPlot.PropertyAxis;
 
 public class TradeSpace {
-    private final List<MetricEvaluation> traversal;
-    public static final MetricEvaluation UTOPIA = 
-            new MetricEvaluation(new MorphologicalMatrix(255, 255, 255));
+    private final List<Simulation> traversal;
+    public static final Simulation UTOPIA = 
+            new Simulation(new InputState(255, 255, 255));
     
     public TradeSpace() {
         this.traversal = new ArrayList<>();
     }
     
-    public void add(MetricEvaluation node) {
+    public void add(Simulation node) {
         traversal.add(node);
     }
     
-    public List<MetricEvaluation> getPath() {
+    public List<Simulation> getPath() {
         return new ArrayList<>(traversal);
     }
     

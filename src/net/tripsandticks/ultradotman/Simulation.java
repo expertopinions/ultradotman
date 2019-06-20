@@ -1,11 +1,11 @@
 package net.tripsandticks.ultradotman;
 
-public class MetricEvaluation {
+public class Simulation {
     private final double hue;
     private final double saturation;
     private final double value;
     
-    public MetricEvaluation(MorphologicalMatrix color) {
+    public Simulation(InputState color) {
         // normalize values to 1
         double normalRed = color.getRed() / 255.;
         double normalGreen = color.getGreen() / 255.;
