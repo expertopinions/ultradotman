@@ -70,13 +70,14 @@ public class LinearPlot {
         List<Double> xPath = points.getAxis(xAxis);
         List<Double> yPath = points.getAxis(yAxis);
         
-        final double minX, maxX, minY, maxY;
-        minX = xPath.stream().reduce(utopiaAxis(true), Math::min);
-        maxX = xPath.stream().reduce(utopiaAxis(true), Math::max);
-        minY = yPath.stream().reduce(utopiaAxis(false), Math::min);
-        maxY = yPath.stream().reduce(utopiaAxis(false), Math::max);
+        double utopiaX = utopiaAxis(true);
+        double utopiaY = utopiaAxis(false);
         
-        addUtopia();
+        final double minX, maxX, minY, maxY;
+        minX = xPath.stream().reduce(utopiaX, Math::min);
+        maxX = xPath.stream().reduce(utopiaX, Math::max);
+        minY = yPath.stream().reduce(utopiaY, Math::min);
+        maxY = yPath.stream().reduce(utopiaY, Math::max);
         
         // plot points
         for (int i = 0; i < xPath.size(); i++) {
@@ -96,6 +97,21 @@ public class LinearPlot {
             line.setStroke(PLOT_COLOR);
             plot.getChildren().add(line);
         }
+
+        // draw utopia
+        Polygon diamond = new Polygon();
+        diamond.getPoints().addAll(new Double[] {
+            0.0,  2.0,
+            1.0,  0.0,
+            0.0, -2.0,
+           -1.0,  0.0
+        });
+        diamond.setScaleX(width * height * 1.1 * POINT_AREA_RATIO);
+        diamond.setScaleY(width * height * 1.1 * POINT_AREA_RATIO);
+        diamond.setFill(Color.WHITE);
+        diamond.setTranslateX(scale(minX, maxX, utopiaX, true));
+        diamond.setTranslateY(scale(minY, maxY, utopiaY, true));
+        plot.getChildren().add(diamond);
     }
     
     private double utopiaAxis(boolean x) {
@@ -113,20 +129,6 @@ public class LinearPlot {
         default:
             throw new RuntimeException("unreachable code");
         }
-    }
-    
-    private void addUtopia() {
-        Polygon diamond = new Polygon();
-        diamond.getPoints().addAll(new Double[] {
-            0.0,  2.0,
-            1.0,  0.0,
-            0.0, -2.0,
-           -1.0,  0.0
-        });
-        diamond.setScaleX(width * height * POINT_AREA_RATIO);
-        diamond.setScaleY(width * height * POINT_AREA_RATIO);
-        diamond.setFill(PLOT_COLOR);
-        plot.getChildren().add(diamond);
     }
 
     private double scale(double min, double max, double value, boolean x) {
