@@ -1,7 +1,7 @@
 package net.tripsandticks.ultradotman;
 
 
-public class RGBColor {
+public class MorphologicalMatrix {
     private final int red;
     private final int green;
     private final int blue;
@@ -12,7 +12,7 @@ public class RGBColor {
      *     red, blue, green are in [0,255]
      */
     
-    public RGBColor(int red, int green, int blue) {
+    public MorphologicalMatrix(int red, int green, int blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;

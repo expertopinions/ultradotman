@@ -1,11 +1,11 @@
 package net.tripsandticks.ultradotman;
 
-public class EmergentProperties {
+public class MetricEvaluation {
     private final double hue;
     private final double saturation;
     private final double value;
     
-    public EmergentProperties(RGBColor color) {
+    public MetricEvaluation(MorphologicalMatrix color) {
         // normalize values to 1
         double normalRed = color.getRed() / 255.;
         double normalGreen = color.getGreen() / 255.;

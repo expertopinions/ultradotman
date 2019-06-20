@@ -13,6 +13,7 @@ public class LinearPlot {
     private TradeSpace points;
     private int width, height, pointRadius;
     private static final double POINT_AREA_RATIO = Math.pow(2, -14);
+    private final Color PLOT_COLOR = Color.ORANGE;
     
     /*
      * Representation invariant:
@@ -49,7 +50,7 @@ public class LinearPlot {
             Circle point = new Circle(scale(minX, maxX, xPath.get(i), true),
                                       scale(minY, maxY, yPath.get(i), false),
                                       pointRadius);
-            point.setFill(Color.ORANGE);
+            point.setFill(PLOT_COLOR);
             plotGroup.getChildren().add(point);
         }
         
@@ -59,19 +60,49 @@ public class LinearPlot {
                                  scale(minY, maxY, yPath.get(i-1), false),
                                  scale(minX, maxX, xPath.get(i), true),
                                  scale(minY, maxY, yPath.get(i), false));
-            line.setStroke(Color.ORANGE);
+            line.setStroke(PLOT_COLOR);
             plotGroup.getChildren().add(line);
         }
+        
+        //plotGroup.getChildren().add(arrow());
     }
 
     private double scale(double min, double max, double value, boolean x) {
-        
         int parameter = x ? width : height;
-        return (value - min) * (parameter / (max - min));
+        // normalize value to be between 0 and 1 before multiplying by the
+        // desired dimension length (width, height)
+        return ((value - min) / (max - min)) * parameter;
     }
     
     public void updatePoints(Group plotGroup) {
         if (plotGroup.getChildren().size() > 0) plotGroup.getChildren().clear();
         plotPoints(plotGroup);
     }
+    
+    public void setXAxis(PropertyAxis newX) throws IllegalArgumentException {
+        if (newX == yAxis) {
+            throw new IllegalArgumentException("x and y axis cannot match");
+        }
+        xAxis = newX;
+    }
+    
+    public void setYAxis(PropertyAxis newY) throws IllegalArgumentException {
+        if (newY == xAxis) {
+            throw new IllegalArgumentException("x and y axis cannot match");
+        }
+        yAxis = newY;
+    }
+    
+    // TODO: arrows pointing in the direction of the tradespace nagivation?
+//    private Polygon arrow() {
+//        Polygon arrow = new Polygon();
+//        arrow.getPoints().addAll(new Double[] {
+//                0.0,  0.0,
+//                5.0,  4.0,
+//                0.0, -9.0,
+//               -5.0,  4.0
+//        });
+//        arrow.setFill(PLOT_COLOR);
+//        return arrow;
+//    }
 }
