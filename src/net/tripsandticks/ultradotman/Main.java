@@ -18,22 +18,22 @@ public class Main extends Application {
     
     @Override
     public void start(Stage stage) {
-
         InputState color = new InputState(255, 0, 0);
         TradeSpace tradeSpace = new TradeSpace();
         
         final Group root = new Group();
         final SimulationRenderer renderer = new SimulationRenderer(color);
         final LinearPlot plot = new LinearPlot(200, 200, 375, 225, tradeSpace);
-        final InputInterface settings = new InputInterface(color, plot, renderer,
-                tradeSpace);
+        final AxisPicker axisPicker = new AxisPicker(plot, 375, 0);
+        final InputInterface settings = new InputInterface(color, plot,
+                                                 renderer, tradeSpace);
         
         stage.setTitle("ultradotman");
         
         root.getChildren().add(renderer.getGroup());
         root.getChildren().add(settings.getGroup());
         root.getChildren().add(plot.getPlot());
-        root.getChildren().add(plot.getAxisPicker());
+        root.getChildren().add(axisPicker.getGroup());
         
         final Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.setFill(renderer.getBackground());
