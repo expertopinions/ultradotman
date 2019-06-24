@@ -18,7 +18,7 @@ import net.tripsandticks.ultradotman.backend.Simulation;
 import net.tripsandticks.ultradotman.backend.TradeSpace;
 
 /**
- * UI element for creating an InputSnapshot object.
+ * UI element for creating an InputState object.
  */
 public class InputInterface {
     private final Group node;

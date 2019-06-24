@@ -15,6 +15,15 @@ import net.tripsandticks.ultradotman.frontend.LinearPlot.PropertyAxis;
 /**
  * UI element which allows the user to choose the x and y axis values from the
  * output of the simulation.
+ * 
+ * In the type of simulation for which this template serves as a foundation,
+ * performance of the simulation is measured along several dimensions. In UDM,
+ * these dimensions are hue, saturation, and value. In actual simulations, you
+ * could have even more than three. The user may want to see how their design
+ * decisions perform on these axes over time, but may have trouble
+ * conceptualizing, say, a six-dimensional graph. Instead, we project the
+ * result of these high-dimension outputs onto a 2D space and let the user
+ * choose which axes to view at any given time.
  */
 public class AxisPicker {
     private final Group node;

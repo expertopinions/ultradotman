@@ -3,6 +3,10 @@ package net.tripsandticks.ultradotman.backend;
 /**
  * Immutable snapshot of the input state. This provides initial conditions for
  * the Simulation.
+ * 
+ * A more advanced program, i.e. one where the user has less direct control
+ * over the initial conditions, may want to include a mutable data type for user
+ * inputs which then produces an immutable snapshot like this one.
  */
 public class InputState {
     private final int red;

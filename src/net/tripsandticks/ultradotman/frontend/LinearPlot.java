@@ -9,6 +9,19 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import net.tripsandticks.ultradotman.backend.TradeSpace;
 
+/**
+ * UI element for displaying a 2-dimensional projection of a traversal of the
+ * trade space. See the Javadoc for AxisPicker for a less jargony explanation.
+ * 
+ * This LinearPlot displays utopia, which represents the best possible outcome
+ * on all axes. I chose the color white to represent utopia, and it is drawn on
+ * this plot as a white diamond. In a useful simulation, you could make utopia
+ * just out of reach at all times as a scathing allegory of real life.
+ * 
+ * You may choose to make this LinearPlot more dynamic by, for example,
+ * replaying previous simulations by clicking on points earlier in the
+ * traversal.
+ */
 public class LinearPlot {
     public enum PropertyAxis { HUE, SATURATION, VALUE }
     private PropertyAxis xAxis, yAxis;
