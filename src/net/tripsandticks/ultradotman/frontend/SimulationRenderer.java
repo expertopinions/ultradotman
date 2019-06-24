@@ -10,8 +10,8 @@ import javafx.scene.shape.Sphere;
 import net.tripsandticks.ultradotman.backend.Simulation;
 
 /**
- * Renderer for the "simulation." The rest of the UI elements are drawn over
- * this.
+ * Visual representation of the "simulation". The rest of the UI elements are
+ * drawn over this.
  */
 public class SimulationRenderer {
     private final Group node;
