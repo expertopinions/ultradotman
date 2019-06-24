@@ -1,10 +1,10 @@
-package net.tripsandticks.ultradotman;
+package net.tripsandticks.ultradotman.backend;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.tripsandticks.ultradotman.LinearPlot.PropertyAxis;
+import net.tripsandticks.ultradotman.frontend.LinearPlot.PropertyAxis;
 
 public class TradeSpace {
     private final List<Simulation> traversal;

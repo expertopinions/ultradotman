@@ -1,5 +1,10 @@
-package net.tripsandticks.ultradotman;
+package net.tripsandticks.ultradotman.backend;
 
+/**
+ * Using a given input state, applies an arbitrary model and outputs relevant
+ * performance characteristics. In this case, the model does nothing, and the
+ * performance characteristics are hue, saturation and value.
+ */
 public class Simulation {
     private final double hue;
     private final double saturation;

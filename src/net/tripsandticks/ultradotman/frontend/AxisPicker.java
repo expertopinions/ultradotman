@@ -1,4 +1,4 @@
-package net.tripsandticks.ultradotman;
+package net.tripsandticks.ultradotman.frontend;
 
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -10,8 +10,12 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import net.tripsandticks.ultradotman.LinearPlot.PropertyAxis;
+import net.tripsandticks.ultradotman.frontend.LinearPlot.PropertyAxis;
 
+/**
+ * UI element which allows the user to choose the x and y axis values from the
+ * output of the simulation.
+ */
 public class AxisPicker {
     private final Group node;
     private final LinearPlot plot;

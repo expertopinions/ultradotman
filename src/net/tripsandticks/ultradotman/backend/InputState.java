@@ -1,6 +1,9 @@
-package net.tripsandticks.ultradotman;
+package net.tripsandticks.ultradotman.backend;
 
-
+/**
+ * Immutable snapshot of the input state. This provides initial conditions for
+ * the Simulation.
+ */
 public class InputState {
     private final int red;
     private final int green;

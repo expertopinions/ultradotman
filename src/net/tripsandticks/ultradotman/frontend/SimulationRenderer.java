@@ -1,4 +1,4 @@
-package net.tripsandticks.ultradotman;
+package net.tripsandticks.ultradotman.frontend;
 
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -7,10 +7,11 @@ import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
+import net.tripsandticks.ultradotman.backend.Simulation;
 
 /**
- * Renderer for Ultra Dotman that the rest of the UI elements are imposed over.
- *
+ * Renderer for the "simulation." The rest of the UI elements are drawn over
+ * this.
  */
 public class SimulationRenderer {
     private final Group node;
@@ -19,17 +20,17 @@ public class SimulationRenderer {
     private final PhongMaterial dotmanMaterial;
     private static final int ULTRADOTMAN_RADIUS = 40;
     
-    SimulationRenderer(InputState color) {
+    SimulationRenderer(Simulation result) {
         this.node = new Group();
         this.dotmanMaterial = new PhongMaterial();
         this.camera = new PerspectiveCamera();
         this.background = Color.gray(0.05);
         
-        updateColor(color);
-        setUpNode(color);
+        updateColor(result);
+        setUpNode();
     }
     
-    private void setUpNode(InputState color) {
+    private void setUpNode() {
         dotmanMaterial.setSpecularColor(Color.gray(0));
         
         Sphere dotman = new Sphere(ULTRADOTMAN_RADIUS);
@@ -62,8 +63,8 @@ public class SimulationRenderer {
         return background;
     }
     
-    public void updateColor(InputState color) {
-        dotmanMaterial.setDiffuseColor(Color.rgb(color.getRed(),
-                color.getBlue(), color.getGreen()));
+    public void updateColor(Simulation result) {
+        dotmanMaterial.setDiffuseColor(Color.hsb(result.getHue(),
+                result.getSaturation(), result.getValue()));
     }
 }

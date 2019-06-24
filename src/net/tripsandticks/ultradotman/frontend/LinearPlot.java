@@ -1,4 +1,4 @@
-package net.tripsandticks.ultradotman;
+package net.tripsandticks.ultradotman.frontend;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import net.tripsandticks.ultradotman.backend.TradeSpace;
 
 public class LinearPlot {
     public enum PropertyAxis { HUE, SATURATION, VALUE }
@@ -67,7 +68,9 @@ public class LinearPlot {
         // plot points
         for (int i = 0; i < xPath.size(); i++) {
             Circle point = new Circle(scale(minX, maxX, xPath.get(i), true),
-                                      scale(minY, maxY, yPath.get(i), false),
+                    // the positive Y axis direction is down, which is
+                    // unintuitive, so i'm flipping it
+                             height - scale(minY, maxY, yPath.get(i), false),
                                       pointRadius);
             point.setFill(PLOT_COLOR);
             plot.getChildren().add(point);
@@ -76,9 +79,9 @@ public class LinearPlot {
         // draw connections between points
         for (int i = 1; i < xPath.size(); i++) {
             Line line = new Line(scale(minX, maxX, xPath.get(i-1), true),
-                                 scale(minY, maxY, yPath.get(i-1), false),
+                        height - scale(minY, maxY, yPath.get(i-1), false),
                                  scale(minX, maxX, xPath.get(i), true),
-                                 scale(minY, maxY, yPath.get(i), false));
+                        height - scale(minY, maxY, yPath.get(i), false));
             line.setStroke(PLOT_COLOR);
             plot.getChildren().add(line);
         }

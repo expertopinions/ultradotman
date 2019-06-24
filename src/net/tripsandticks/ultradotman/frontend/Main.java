@@ -1,10 +1,13 @@
-package net.tripsandticks.ultradotman;
+package net.tripsandticks.ultradotman.frontend;
 
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import net.tripsandticks.ultradotman.backend.InputState;
+import net.tripsandticks.ultradotman.backend.Simulation;
+import net.tripsandticks.ultradotman.backend.TradeSpace;
 
 public class Main extends Application {
     
@@ -18,14 +21,15 @@ public class Main extends Application {
     
     @Override
     public void start(Stage stage) {
-        InputState color = new InputState(255, 0, 0);
+        InputState initialState = new InputState(255, 0, 0);
+        Simulation initialResult = new Simulation(initialState);
         TradeSpace tradeSpace = new TradeSpace();
         
         final Group root = new Group();
-        final SimulationRenderer renderer = new SimulationRenderer(color);
+        final SimulationRenderer renderer = new SimulationRenderer(initialResult);
         final LinearPlot plot = new LinearPlot(200, 200, 375, 225, tradeSpace);
         final AxisPicker axisPicker = new AxisPicker(plot, 375, 0);
-        final InputInterface settings = new InputInterface(color, plot,
+        final InputInterface settings = new InputInterface(initialState, plot,
                                                  renderer, tradeSpace);
         
         stage.setTitle("ultradotman");

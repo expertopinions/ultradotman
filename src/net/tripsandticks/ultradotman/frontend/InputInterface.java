@@ -1,4 +1,4 @@
-package net.tripsandticks.ultradotman;
+package net.tripsandticks.ultradotman.frontend;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -11,7 +11,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
+import net.tripsandticks.ultradotman.backend.InputState;
+import net.tripsandticks.ultradotman.backend.Simulation;
+import net.tripsandticks.ultradotman.backend.TradeSpace;
 
+/**
+ * UI element for creating an InputSnapshot object.
+ */
 public class InputInterface {
     private final Group node;
     private final LinearPlot plot;
@@ -20,6 +28,7 @@ public class InputInterface {
     
     private InputState color;
     private Simulation ilities;
+    private Label status;
     
     public InputInterface(InputState color, LinearPlot plot,
             SimulationRenderer renderer, TradeSpace tradeSpace) {
@@ -40,6 +49,10 @@ public class InputInterface {
 
     private void setUpNode() {
         GridPane settings = new GridPane();
+        
+        status = new Label();
+        status.setTextFill(Color.RED);
+        status.setTextAlignment(TextAlignment.RIGHT);
 
         Label labelR = new Label("Red: ");
         Label labelG = new Label("Green: ");
@@ -76,6 +89,7 @@ public class InputInterface {
         settings.add(go, 1, 5);
         settings.add(emptyLabel, 1, 1);
         settings.add(random, 1, 0);
+        settings.add(status, 0, 6, 2, 1);
         settings.setPadding(new Insets(5));
 
         go.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -89,8 +103,11 @@ public class InputInterface {
                     color = new InputState(red, green, blue);
                     update();
                 }
-                catch (NumberFormatException e) {
-                    System.err.println("invalid input");
+                catch (NumberFormatException nfe) {
+                    status.setText("invalid input");
+                }
+                catch (AssertionError ae) {
+                    status.setText("values must be\nbetween 0 and 255");
                 }
             }
         });
@@ -115,8 +132,9 @@ public class InputInterface {
     }
     
     private void update() {
-        renderer.updateColor(color);
+        status.setText("");
         ilities = new Simulation(color);
+        renderer.updateColor(ilities);
         space.add(ilities);
         plot.updatePoints();
     }
