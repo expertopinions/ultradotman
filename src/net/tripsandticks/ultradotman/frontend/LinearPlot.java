@@ -133,6 +133,7 @@ public class LinearPlot {
     }
 
     private double scale(double min, double max, double value, boolean x) {
+        if ((max - min) == 0) return 0;
         int parameter = x ? width : height;
         // normalize value to be between 0 and 1 before multiplying by the
         // desired dimension length (width, height)
