@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.tripsandticks.ultradotman.frontend.LinearPlot.PropertyAxis;
-
 /**
  * Stores the results of user inputs over time.
  */

@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import net.tripsandticks.ultradotman.backend.PropertyAxis;
 import net.tripsandticks.ultradotman.backend.TradeSpace;
 
 /**
@@ -23,7 +24,6 @@ import net.tripsandticks.ultradotman.backend.TradeSpace;
  * traversal.
  */
 public class LinearPlot {
-    public enum PropertyAxis { HUE, SATURATION, VALUE }
     private PropertyAxis xAxis, yAxis;
     private TradeSpace points;
     private int width, height, pointRadius;

@@ -10,7 +10,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import net.tripsandticks.ultradotman.frontend.LinearPlot.PropertyAxis;
+import net.tripsandticks.ultradotman.backend.PropertyAxis;
 
 /**
  * UI element which allows the user to choose the x and y axis values from the
